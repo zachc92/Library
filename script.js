@@ -23,12 +23,59 @@ const eventListeners = (() => {
     const bookAuthor = document.querySelector("#author");
     const bookYearPublished = document.querySelector("#year_published");
     const bookRead = document.querySelector("#read_status");
+    const bookEntryForm = document.querySelector("#book_entry");
     const addBookButton = document.querySelector("#add_book");
     const displayCase = document.querySelector(".display-case");
+    const bookTitleError = document.querySelector("#title + span.error")
+    const bookAuthorError = document.querySelector("#author + span.error");
+    const bookYearPublishedError = document.querySelector("#year_published + span.error");
 
-    addBookButton.addEventListener("click", () => {
-        controller.addBookToLibrary(bookTitle.value, bookAuthor.value, bookYearPublished.value, bookRead.checked);
+    bookTitle.addEventListener("input", (e) => {
+        if(bookTitle.validity.valid) {
+            bookTitleError.textContent = "";
+        } else {
+            showError(e.target.id);
+        }
     });
+
+    bookAuthor.addEventListener("input", (e) => {
+        if(bookAuthor.validity.valid) {
+            bookAuthorError.textContent = "";
+        } else {
+            showError(e.target.id);
+        }
+    });
+
+    bookYearPublished.addEventListener("input", (e) => {
+        if(bookYearPublished.validity.valid) {
+            bookYearPublishedError.textContent = "";
+        } else {
+            showError(e.target.id);
+        }
+    });
+
+    bookEntryForm.addEventListener("submit", (e) => {
+        if(!bookTitle.validity.valid || !bookAuthor.validity.valid || !bookYearPublished.validity.valid){
+            alert("Fill out the form correctly!");
+            return;
+        } else {
+            controller.addBookToLibrary(bookTitle.value, bookAuthor.value, bookYearPublished.value, bookRead.checked);
+        }
+    });
+
+    const showError = (id) => {
+        if(id == "title"){
+            bookTitleError.textContent = "Please enter at least 3 characters."
+        } else if (id == "author"){
+            bookAuthorError.textContent = "Please enter at least 4 characters."
+        } else if (id == "year_published"){
+            if(bookYearPublished.value < 1000){
+                bookYearPublishedError.textContent = "You got a time machine?"
+            } else if (bookYearPublished.value > new Date().getFullYear()){
+                bookYearPublishedError.textContent = "Are you from the future?";
+            }
+        }
+    };
 
     const renderNewBook = (book) => {
         const child = displayCase.appendChild(document.createElement("div"));
