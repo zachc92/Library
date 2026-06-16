@@ -55,6 +55,7 @@ const eventListeners = (() => {
     });
 
     bookEntryForm.addEventListener("submit", (e) => {
+        e.preventDefault();
         if(!bookTitle.validity.valid || !bookAuthor.validity.valid || !bookYearPublished.validity.valid){
             alert("Fill out the form correctly!");
             return;
